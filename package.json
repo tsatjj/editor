@@ -12,7 +12,7 @@
   ],
   "license": "ISC",
   "scripts": {
-    "all": "npm-run-all -s clean build build:legacy dist",
+    "all": "npm-run-all -s clean build build:legacy dist deploy",
     "build": "npm-run-all -s build:css build:data build:dev",
     "build:css": "node scripts/build_css.js",
     "build:data": "shx mkdir -p dist/data && node scripts/build_data.js",
@@ -20,6 +20,7 @@
     "build:legacy": "rollup --config config/rollup.config.legacy.js",
     "build:stats": "rollup --config config/rollup.config.stats.js",
     "clean": "shx rm -f dist/*.js dist/*.map dist/*.css dist/img/*.svg",
+    "deploy": "mkdir -p /var/www/opendataland/editor/master/iD && cp -Rf dist/* /var/www/opendataland/editor/master/iD && cp index.html /var/www/opendataland/editor/master/iD/id.html && sed -i \"s/##ID_CONSUMER_KEY##/$ID_CONSUMER_KEY/\" /var/www/opendataland/editor/master/iD/*.html /var/www/opendataland/editor/master/iD/iD.* && sed -i \"s/##ID_CONSUMER_SECRET##/$ID_CONSUMER_SECRET/\" /var/www/opendataland/editor/master/iD/*.html /var/www/opendataland/editor/master/iD/iD.*",
     "dist": "npm-run-all -p dist:**",
     "dist:mapillary": "shx mkdir -p dist/mapillary-js && shx cp -R node_modules/mapillary-js/dist/* dist/mapillary-js/",
     "dist:pannellum": "shx mkdir -p dist/pannellum-streetside && shx cp -R node_modules/pannellum/build/* dist/pannellum-streetside/",
