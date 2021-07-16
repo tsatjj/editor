@@ -1,4 +1,7 @@
 import { utilFetchJson } from '../util/util';
+import parseVersion from 'vparse';
+// Double check this resolves to iD's `package.json`
+import packageJSON from '../../package.json';
 
 let _mainFileFetcher = coreFileFetcher(); // singleton
 
@@ -8,6 +11,10 @@ export { _mainFileFetcher as fileFetcher };
 // coreFileFetcher asynchronously fetches data from JSON files
 //
 export function coreFileFetcher() {
+  const ociVersion = packageJSON.dependencies['osm-community-index'] || packageJSON.devDependencies['osm-community-index'];
+  const v = parseVersion(ociVersion);
+  const vMinor = `${v.major}.${v.minor}`;
+
   let _this = {};
   let _inflight = {};
   let _fileMap = {
@@ -19,10 +26,9 @@ export function coreFileFetcher() {
     'keepRight': 'data/keepRight.min.json',
     'languages': 'data/languages.min.json',
     'locales': 'locales/index.min.json',
-    'nsi_brands': 'https://cdn.jsdelivr.net/npm/name-suggestion-index@4/dist/brands.min.json',
-    'nsi_filters': 'https://cdn.jsdelivr.net/npm/name-suggestion-index@4/dist/filters.min.json',
-    'oci_features': 'https://cdn.jsdelivr.net/npm/osm-community-index@3/dist/featureCollection.min.json',
-    'oci_resources': 'https://cdn.jsdelivr.net/npm/osm-community-index@3/dist/resources.min.json',
+    'oci_defaults': `https://cdn.jsdelivr.net/npm/osm-community-index@${vMinor}/dist/defaults.min.json`,
+    'oci_features': `https://cdn.jsdelivr.net/npm/osm-community-index@${vMinor}/dist/featureCollection.min.json`,
+    'oci_resources': `https://cdn.jsdelivr.net/npm/osm-community-index@${vMinor}/dist/resources.min.json`,
     'preset_categories': 'https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@3/dist/preset_categories.min.json',
     'preset_defaults': 'https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@3/dist/preset_defaults.min.json',
     'preset_fields': 'https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@3/dist/fields.min.json',
